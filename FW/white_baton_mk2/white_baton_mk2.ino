@@ -161,6 +161,7 @@ void setup(){
   Serial.println("Testing device connections...");
   Serial.println(accelgyro.testConnection() ? "MPU9250 connection successful" : "MPU9250 connection failed");
 
+  /*
   // verify LED connection
   setLEDColor(255,255,255);
   delay(2000);
@@ -171,7 +172,7 @@ void setup(){
   setLEDColor(0,0,255);
   delay(200);
   setLEDColor(0,0,0);
-
+  */
 }
 
 void loop(){
@@ -196,9 +197,9 @@ void loop(){
   setVibrator();
   printGyroDataBySerial();
   printVibDataBySerial();
-  BTSerial.write(accellist);
+  //BTSerial.write(accellist);
   //BTSerial.write(bt_buffer[0]);
-  BTSerial.write('\n');
+  //BTSerial.write('\n');
   
   delay(5);
 }
