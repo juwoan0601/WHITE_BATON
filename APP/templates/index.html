@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WHITE BATON</title>
+  <link rel="stylesheet" href="{{url_for('static',filename='css/main.css')}}">
+</head>
+
+<body class="bg-black">
+  <div class="flex-row text-white">
+    <a href="{{ url_for('home') }}"><input type="button" value="HOME" ></a>
+    <h3>DEVICE CONTROL</h3>
+    <p >
+      <b>UP: </b>{% if vib_states['UP']==1 %} <b style="color:green;">◉ 켜짐</b> 
+          {% elif vib_states['UP']==0 %} <b style="color:red;">◎ 꺼짐</b>
+          {% endif %}
+      <a href="{{ url_for('device_switch', SID='UP', state=1) }}"><input type="button" value="켜기" ></a>
+      <a href="{{ url_for('device_switch', SID='UP', state=0) }}"> <input type="button" value="끄기"> </a>
+    </p>
+    <p >
+      <b>DOWN: </b>{% if vib_states['DOWN']==1 %} <b style="color:green;">◉ 켜짐</b> 
+          {% elif vib_states['DOWN']==0 %} <b style="color:red;">◎ 꺼짐</b>
+          {% endif %}	
+      <a href="{{ url_for('device_switch', SID='DOWN', state=1) }}"><input type="button" value="켜기" ></a>
+      <a href="{{ url_for('device_switch', SID='DOWN', state=0) }}"> <input type="button" value="끄기"> </a>
+    </p>
+    <p >
+      <b>LEFT: </b>{% if vib_states['LEFT']==1 %} <b style="color:green;">◉ 켜짐</b> 
+          {% elif vib_states['LEFT']==0 %} <b style="color:red;">◎ 꺼짐</b>
+          {% endif %}	
+      <a href="{{ url_for('device_switch', SID='LEFT', state=1) }}"><input type="button" value="켜기" ></a>
+      <a href="{{ url_for('device_switch', SID='LEFT', state=0) }}"> <input type="button" value="끄기"> </a>
+    </p>
+    <p >
+      <b>RIGHT: </b>{% if vib_states['RIGHT']==1 %} <b style="color:green;">◉ 켜짐</b> 
+          {% elif vib_states['RIGHT']==0 %} <b style="color:red;">◎ 꺼짐</b>
+          {% endif %}	
+      <a href="{{ url_for('device_switch', SID='RIGHT', state=1) }}"><input type="button" value="켜기" ></a>
+      <a href="{{ url_for('device_switch', SID='RIGHT', state=0) }}"> <input type="button" value="끄기"> </a>
+    </p>
+  </div>
+  <div class="flex-col">
+    <h3 class="text-white font-light">Sensor Streaming</h3>
+    <input class="rounded-md width-80" value="{{ url_for('sensor_feed') }}" disabled>
+  </div>
+  <div class="flex-col">
+    <h3 class="text-white font-light">Camare Streaming</h3>
+    <img class="rounded-md width-80" src="{{ url_for('video_feed') }}">
+  </div>
+</body>
+
+</html>
