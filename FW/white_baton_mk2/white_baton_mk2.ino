@@ -111,10 +111,10 @@ int Accel_scale = 16;
 int BT_TX = 2;
 int BT_RX = 3;
 
-int VIB_UP = 4;
-int VIB_DOWN = 5;
-int VIB_LEFT = 6;
-int VIB_RIGHT = 7;
+int VIB_UP = 5;
+int VIB_DOWN = 7;
+int VIB_LEFT = 4;
+int VIB_RIGHT = 6;
 
 int STATUS_RED = 9;
 int STATUS_GREEN = 10;
@@ -197,9 +197,9 @@ void loop(){
   setVibrator();
   printGyroDataBySerial();
   printVibDataBySerial();
-  //BTSerial.write(accellist);
-  //BTSerial.write(bt_buffer[0]);
-  //BTSerial.write('\n');
+  BTSerial.write(accellist);
+  BTSerial.write(bt_buffer[0]);
+  BTSerial.write('\n');
   
   delay(5);
 }
@@ -257,16 +257,16 @@ void setLEDColor(int red, int green, int blue){
 // ********************************************************Vibrator Control Method ***********************************************************************************
 void getVibratorState(void){
   // longitudinal: Y-axis
+  if ((1.20 > Axyz[2]) && (Axyz[2] > 0.70)){Vudlr[0] = true; Vudlr[1] = false;}
+  if ((-1.20 < Axyz[2]) && (Axyz[2] < -0.70)){Vudlr[0] = false; Vudlr[1] = true;}
+  if ((1.20 > Axyz[1]) && (Axyz[1] > 0.70)){Vudlr[2] = true; Vudlr[3] = false;}
+  if ((-1.20 < Axyz[1]) && (Axyz[1] < -0.70)){Vudlr[2] = false; Vudlr[3] = true;}
   /*
-  if ((1.20 > Axyz[1]) && (Axyz[1] > 0.70)){Vudlr[0] = true; Vudlr[1] = false;}
-  if ((-1.20 < Axyz[1]) && (Axyz[1] < -0.70)){Vudlr[0] = false; Vudlr[1] = true;}
-  if ((1.20 > Axyz[2]) && (Axyz[2] > 0.70)){Vudlr[2] = true; Vudlr[3] = false;}
-  if ((-1.20 < Axyz[2]) && (Axyz[2] < -0.70)){Vudlr[2] = false; Vudlr[3] = true;}
-  */
   for(int i=0; i<4; i++){
     if (bt_buffer[i] == '1'){Vudlr[i] = true;}
     else if (bt_buffer[i] == '0'){Vudlr[i] = false;}
   }
+  */
 }
 
 void setVibrator(void){

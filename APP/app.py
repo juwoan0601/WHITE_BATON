@@ -1,16 +1,27 @@
 #Import necessary libraries
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, url_for, redirect, Response
 import cv2
 import mediapipe as mp
 import numpy as np
+import os  
+import time
+import subprocess
+from control_bluetooth import get_message, send_message
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 
 #Initialize the Flask app
 app = Flask(__name__)
 
-camera = cv2.VideoCapture(0)
+vib_states = {
+    'UP':   0,
+    'DOWN': 0,
+    'LEFT': 0,
+    'RIGHT':0,
+}
+vib_list = list(vib_states.keys())
 
+camera = cv2.VideoCapture(0)
 def gen_frames():  
     while True:
         success, frame = camera.read()  # read the camera frame
@@ -21,6 +32,15 @@ def gen_frames():
         
             # Make detection
             results = pose.process(image)
+            try:
+                landmarks = results.pose_landmarks.landmark
+                print(landmarks[mp_pose.PoseLandmark.LEFT_INDEX.value].visibility)
+                if landmarks[mp_pose.PoseLandmark.LEFT_INDEX.value].visibility > 0.9:
+                    subprocess.Popen(["python", "control_bluetooth.py", "--msg=1111"])
+                else: 
+                    subprocess.Popen(["python", "control_bluetooth.py", "--msg=0000"])
+            except AttributeError:
+                pass
         
             # Recolor back to BGR
             image.flags.writeable = True
@@ -40,9 +60,27 @@ def gen_frames():
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
 
-@app.route('/')
+def gen_sensors():
+    while True: yield str(np.random.rand())
+
+@app.route("/")
+def home():
+    return render_template('home.html', vib_states = vib_states)
+
+@app.route("/index")
 def index():
-    return render_template('index.html')
+	return render_template("index.html", vib_states = vib_states) 
+
+@app.route('/<SID>/<int:state>')
+def device_switch(SID, state):                                    
+    vib_states[SID] = state
+    #os.system('python sendBluetoothCommend.py --msg={0}'.format(''.join([str(vib_states[v]) for v in vib_list])))
+    subprocess.call(["python", "control_bluetooth.py", "--msg={0}".format(''.join([str(vib_states[v]) for v in vib_list]))])
+    return redirect(url_for('index')) 
+
+@app.route('/sensor_feed')
+def sensor_feed():
+    return Response(gen_sensors(), mimetype='text')
 
 @app.route('/video_feed')
 def video_feed():
