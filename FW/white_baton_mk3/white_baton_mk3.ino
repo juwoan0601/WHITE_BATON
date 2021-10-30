@@ -114,10 +114,10 @@ int BT_RX_T = 3;
 int BT_TX_R = 12;
 int BT_RX_R = 13;
 
-int VIB_UP = 5;
-int VIB_DOWN = 7;
-int VIB_LEFT = 4;
-int VIB_RIGHT = 6;
+int VIB_UP = 4;
+int VIB_DOWN = 5;
+int VIB_LEFT = 6;
+int VIB_RIGHT = 7;
 
 int STATUS_RED = 9;
 int STATUS_GREEN = 10;
@@ -182,7 +182,7 @@ void setup(){
 
 void loop(){
   String buf;
-  while (BTSerial_T.available() && BTSerial_R.available()) {
+  while (BTSerial_R.available()) {
     char c = BTSerial_R.read();
     buf += c;
   }
@@ -209,7 +209,7 @@ void loop(){
   Serial.print("IN: ");
   Serial.print(bt_buffer);
   Serial.print(" | OUT: ");
-  Serial.print(accellist);
+  Serial.println(accellist);
   delay(5);
 }
 // ******************************************************** Test Method ***********************************************************************************
@@ -287,6 +287,7 @@ void setVibrator(void){
     else{digitalWrite(VIB_LEFT, LOW);}
     if (Vudlr[3]){digitalWrite(VIB_RIGHT, HIGH);}
     else{digitalWrite(VIB_RIGHT, LOW);}
+    delay(5);
 }
 
 // ********************************************************Data Protocol Method ***********************************************************************************
