@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 
-int TX_BLE = 2; 
-int RX_BLE = 3;
+int TX_BLE = 12; 
+int RX_BLE = 13;
 
 SoftwareSerial BTSerial(TX_BLE, RX_BLE); //아두이노 D2에 TXD, D3에 RXD를 연결 
  
