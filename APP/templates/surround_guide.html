@@ -21,34 +21,9 @@
                 });
             }, 1000);  
     </script>
-  </div>
-  <div>
-    <p class="text-white" id="sensor">Here will be sensor value</p>
-    <script>
-        var sensor = document.getElementById("sensor");
-        setInterval(() => {
-            fetch("{{ url_for('sensor_feed') }}")
-            .then(response => {
-                    response.text().then(t => {sensor.innerHTML = t})
-                });
-            }, 100);  
-    </script>
-  </div>
-  <div>
-    <p class="text-white" id="commend">Here will be date|time</p>
-    <script>
-        var commend = document.getElementById("commend");
-        setInterval(() => {
-            fetch("{{ url_for('commend_feed') }}")
-            .then(response => {
-                    response.text().then(t => {commend.innerHTML = t})
-                });
-            }, 1000);  
-    </script>
-  </div>
   <div class="flex-col">
     <h3 class="text-white font-light">Camera Streaming</h3>
-    <img class="rounded-md width-80" src="{{ url_for('video_feed') }}">
+    <img class="rounded-md width-80" src="{{ url_for('surround_guide') }}">
   </div>
 </body>
 

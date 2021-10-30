@@ -108,8 +108,11 @@ int Accel_scale = 16;
 // PIN info
 // Gyro_SCL = A5
 // Gyro_SDA = A4
-int BT_TX = 2;
-int BT_RX = 3;
+int BT_TX_T = 2;
+int BT_RX_T = 3;
+
+int BT_TX_R = 12;
+int BT_RX_R = 13;
 
 int VIB_UP = 5;
 int VIB_DOWN = 7;
@@ -129,7 +132,8 @@ char compasslist[19]; //******a******a******a
 String bt_buffer = "0000";
 
 // Bluetooth Setting
-SoftwareSerial BTSerial(BT_TX, BT_RX); // Software Serial (TX,RX) 
+SoftwareSerial BTSerial_T(BT_TX_T, BT_RX_T); // Software Serial (TX,RX) 
+SoftwareSerial BTSerial_R(BT_TX_R, BT_RX_R); // Software Serial (TX,RX) 
 
 // Timer Setting
 static long analogPinTimer = 0; // 1) 
@@ -139,10 +143,11 @@ unsigned long thisMicros_old; // 3)
 void setup(){
   Wire.begin();
   Serial.begin(38400);  // 통신속도 38400 bps
-  BTSerial.begin(9600);
+  BTSerial_T.begin(9600);
+  BTSerial_R.begin(9600);
   char FWversion[10] = VERSION;
-  BTSerial.write(FWversion);
-  BTSerial.write('\n');
+  BTSerial_T.write(FWversion);
+  BTSerial_T.write('\n');
   pinMode(STATUS_RED,OUTPUT);
   pinMode(STATUS_GREEN,OUTPUT);
   pinMode(STATUS_BLUE,OUTPUT);
@@ -177,15 +182,15 @@ void setup(){
 
 void loop(){
   String buf;
-  while (BTSerial.available()) {
-    char c = BTSerial.read();
+  while (BTSerial_T.available() && BTSerial_R.available()) {
+    char c = BTSerial_R.read();
     buf += c;
   }
   if (buf.length() > 4){
     for(int i=0; i<4; i++){bt_buffer[i]=buf[i];}
   }
-  Serial.print("Bluetooth IN: ");
-  Serial.println(bt_buffer);
+  //Serial.print("Bluetooth IN: ");
+  //Serial.println(bt_buffer);
   
   getAccel_Data();
   getGyro_Data();
@@ -195,13 +200,16 @@ void loop(){
   getTiltHeading(); 
   getVibratorState();
   setVibrator();
-  printGyroDataBySerial();
-  printVibDataBySerial();
-  Serial.println(accellist);
-  BTSerial.write(accellist);
+  //printGyroDataBySerial();
+  //printVibDataBySerial();
+  //Serial.println(accellist);
+  BTSerial_T.write(accellist);
   //BTSerial.write(bt_buffer[0]);
-  BTSerial.write('\n');
-  
+  BTSerial_T.write('\n');
+  Serial.print("IN: ");
+  Serial.print(bt_buffer);
+  Serial.print(" | OUT: ");
+  Serial.print(accellist);
   delay(5);
 }
 // ******************************************************** Test Method ***********************************************************************************
